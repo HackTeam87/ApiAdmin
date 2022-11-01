@@ -36,20 +36,20 @@ def allowed_file(filename):
 
 
 # Home
-@app.route('/')
+@app.route('/golden/admin')
 def admin():
     return render_template('index.html')
 
 
 # Group
-@app.route('/main-group')
+@app.route('/golden/admin/main-group')
 def main_group():
     parent_group = ParentGroup.query.all()
     sub_group = SubGroup.query.all()
     return render_template('pages/group-add.html', parent_group=parent_group, sub_group=sub_group)
 
 
-@app.route("/add-main-group", methods=['POST'])
+@app.route("/golden/admin/add-main-group", methods=['POST'])
 def add_group():
     name = request.form.get('name')
     if request.method == 'POST':
@@ -66,18 +66,18 @@ def add_group():
             db.session.add(pg)
             db.session.commit()
 
-    return redirect('/main-group')
+    return redirect('/golden/admin/main-group')
 
 
-@app.route("/delete-parent-group=<int:id>")
+@app.route("/golden/admin/delete-parent-group=<int:id>")
 def delete_parent_group(id):
     ParentGroup.query.filter(ParentGroup.id == id).delete()
     db.session.commit()
-    return redirect('/main-group')
+    return redirect('/golden/admin/main-group')
 
 
 # subGroup
-@app.route("/add-sub-group", methods=['POST'])
+@app.route("/golden/admin/add-sub-group", methods=['POST'])
 def product_add_sub_group():
     p_name = request.form.get('p_name')
     p_id = request.form.get('p_id')
@@ -95,18 +95,18 @@ def product_add_sub_group():
             db.session.add(p)
             db.session.commit()
 
-    return redirect('/main-group')
+    return redirect('/golden/admin/main-group')
 
 
-@app.route("/delete-sub-group=<int:id>")
+@app.route("/golden/admin/delete-sub-group=<int:id>")
 def delete_sub_group(id):
     SubGroup.query.filter(SubGroup.id == id).delete()
     db.session.commit()
-    return redirect('/main-group')
+    return redirect('/golden/admin/main-group')
 
 
 # Product
-@app.route('/product')
+@app.route('/golden/admin/product')
 def product():
     products = Product.query.all()
     parent_group = ParentGroup.query.all()
@@ -114,7 +114,7 @@ def product():
     return render_template('pages/product.html', parent_group=parent_group, sub_group=sub_group, products=products)
 
 
-@app.route("/product-add", methods=['POST'])
+@app.route("/golden/admin/product-add", methods=['POST'])
 def product_add():
     name = request.form.get('name')
     description = request.form.get('description')
@@ -142,14 +142,14 @@ def product_add():
     return redirect('/product')
 
 
-@app.route('/product-edit=<int:id>')
+@app.route('/golden/admin/product-edit=<int:id>')
 def product_edit(id):
     products_group = SubGroup.query.all()
     product = Product.query.filter(Product.id == id)
     return render_template('pages/product-edit.html', products_group=products_group, product=product)
 
 
-@app.route("/product-edit-add=<int:id>", methods=['POST'])
+@app.route("/golden/admin/product-edit-add=<int:id>", methods=['POST'])
 def product_edit_add(id):
     product = Product.query.filter(Product.id == id).first()
     name = request.form.get('name')
@@ -177,7 +177,7 @@ def product_edit_add(id):
     return redirect(url_for('product'))
 
 
-@app.route("/product-delete=<int:id>")
+@app.route("/golden/admin/product-delete=<int:id>")
 def product_delete(id):
     pdg = Product.query.filter(Product.id == id).delete()
     db.session.commit()
@@ -185,13 +185,13 @@ def product_delete(id):
 
 
 # NEWS
-@app.route("/news")
+@app.route("/golden/admin/news")
 def news():
     news = News.query.all()
     return render_template('pages/news.html', news=news)
 
 
-@app.route("/news-add", methods=['POST'])
+@app.route("/golden/admin/news-add", methods=['POST'])
 def news_add():
     title = request.form.get('title')
     text = request.form.get('text')
@@ -215,13 +215,13 @@ def news_add():
     return redirect('/news')
 
 
-@app.route('/news-edit=<int:id>')
+@app.route('/golden/admin/news-edit=<int:id>')
 def news_edit(id):
     news = News.query.filter(News.id == id)
     return render_template('pages/news-edit.html', news=news)
 
 
-@app.route("/news-edit-add=<int:id>", methods=['POST'])
+@app.route("/golden/admin/news-edit-add=<int:id>", methods=['POST'])
 def news_edit_add(id):
     news = News.query.filter(News.id == id).first()
     title = request.form.get('title')
@@ -244,7 +244,7 @@ def news_edit_add(id):
     return redirect(url_for('news'))
 
 
-@app.route("/news-delete=<int:id>")
+@app.route("/golden/admin/news-delete=<int:id>")
 def news_delete(id):
     n = News.query.filter(News.id == id).delete()
     db.session.commit()
@@ -327,7 +327,7 @@ def question_api():
         "reason_id": 12,
         "phone": FormData['phone'],
         "destination_time": dt_string,
-        "comment": '\n' + 'Звернення: ' + FormData['name'] + '\n' + 'Причина: ' + FormData['message']
+        "comment": '\n' + 'ФИО: ' + FormData['name'] + '\n' + 'Причина: ' + FormData['message']
     }
 
     response = requests.post(url, json=json, headers=headers)
